@@ -1,0 +1,35 @@
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: council-db
+    environment:
+      POSTGRES_USER: dymacademy
+      POSTGRES_PASSWORD: "13UvKTe2sjwz1*$"
+      POSTGRES_DB: event_map_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend
+    container_name: council-backend
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=postgresql://dymacademy:13UvKTe2sjwz1%2A%24@db:5432/event_map_db?schema=public
+      - JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+      - PORT=3000
+    depends_on:
+      - db
+
+  frontend:
+    build: ./frontend
+    container_name: council-frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
