@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = '/api';
+const API_BASE_URL = 'https://api.dymacademy.xyz/api';
 
 // Create axios instance
 const api = axios.create({

@@ -9,8 +9,9 @@ export default defineConfig({
         port: 5173,
         proxy: {
             '/api': {
-                target: 'http://backend:3000',
-                changeOrigin: true
+                target: 'https://api.dymacademy.xyz',
+                changeOrigin: true,
+                rewrite: (path) => path.replace(/^\/api/, '/api')
             }
         }
     }
