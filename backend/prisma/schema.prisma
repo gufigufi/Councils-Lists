@@ -27,6 +27,7 @@ model Council {
   address       String
   zipCode       String
   state         String
+  country       String   @default("USA")
   latitude      Float?
   longitude     Float?
   createdAt     DateTime @default(now())
