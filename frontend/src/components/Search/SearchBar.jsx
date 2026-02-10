@@ -20,7 +20,7 @@ function SearchBar({ onSearch, loading, onClear }) {
 
     return (
         <div className="search-bar">
-            <h2 className="search-title">Find Events Near You</h2>
+            <h2 className="search-title">Find Councils Near You</h2>
             <form onSubmit={handleSubmit} className="search-form">
                 <input
                     type="text"

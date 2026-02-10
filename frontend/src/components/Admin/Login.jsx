@@ -42,7 +42,7 @@ function Login() {
                 <div className="login-card card">
                     <div className="login-header">
                         <h1 className="login-title">🔐 Admin Login</h1>
-                        <p className="login-subtitle">Event Map Finder</p>
+                        <p className="login-subtitle">Council Map Finder</p>
                     </div>
 
                     <form onSubmit={handleSubmit}>
