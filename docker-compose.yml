@@ -1,11 +1,41 @@
+version: '3.8'
+
 services:
+  traefik:
+    image: traefik:v2.11  # <--- МЫ ОБНОВИЛИ ВЕРСИЮ ЗДЕСЬ
+    container_name: traefik
+    restart: always
+    environment:
+      - DOCKER_API_VERSION=1.44 # На всякий случай оставляем подсказку
+    command:
+      - "--api.insecure=false"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      # Редирект с HTTP на HTTPS
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+      # Настройка SSL
+      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.email=admin@dymacademy.xyz"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./letsencrypt:/letsencrypt"
+
   db:
     image: postgres:15-alpine
     container_name: council-db
+    restart: always
     environment:
       POSTGRES_USER: dymacademy
       POSTGRES_PASSWORD: "13UvKTe2sjwz1*$"
       POSTGRES_DB: event_map_db
+    # ДОБАВЬ ВОТ ЭТИ ДВЕ СТРОЧКИ:
     ports:
       - "5432:5432"
     volumes:
@@ -14,25 +44,30 @@ services:
   backend:
     build: ./backend
     container_name: council-backend
-    ports:
-      - "3000:3000"
+    restart: always
     environment:
       - DATABASE_URL=postgresql://dymacademy:13UvKTe2sjwz1%2A%24@db:5432/event_map_db?schema=public
-      - JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+      - JWT_SECRET=kWP14QLxEM+nOvtsURBSSaxMrLKXwdRsuZ557HExs2s=
       - PORT=3000
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.rule=Host(`api.dymacademy.xyz`)"
+      - "traefik.http.routers.backend.entrypoints=websecure"
+      - "traefik.http.routers.backend.tls.certresolver=myresolver"
+      - "traefik.http.services.backend.loadbalancer.server.port=3000"
     depends_on:
       - db
 
   frontend:
     build: ./frontend
     container_name: council-frontend
-    ports:
-      - "5173:5173"
-    volumes:
-      - ./frontend/src:/app/src
-      - ./frontend/public:/app/public
-      - ./frontend/index.html:/app/index.html
-      - ./frontend/vite.config.js:/app/vite.config.js
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.rule=Host(`dymacademy.xyz`)"
+      - "traefik.http.routers.frontend.entrypoints=websecure"
+      - "traefik.http.routers.frontend.tls.certresolver=myresolver"
+      - "traefik.http.services.frontend.loadbalancer.server.port=5173"
     depends_on:
       - backend
 
