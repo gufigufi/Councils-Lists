@@ -42,7 +42,7 @@
   letter-spacing: -0.02em;
 }
 
-.phone-link {
+.admin-link {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -56,7 +56,7 @@
   border: 2px solid rgba(255, 255, 255, 0.3);
 }
 
-.phone-link:hover {
+.admin-link:hover {
   background: rgba(255, 255, 255, 0.1);
   border-color: white;
 }
@@ -154,7 +154,7 @@
     font-size: 1.25rem;
   }
 
-  .phone-link {
+  .admin-link {
     font-size: 0.9375rem;
     padding: 0.5rem 0.875rem;
   }
