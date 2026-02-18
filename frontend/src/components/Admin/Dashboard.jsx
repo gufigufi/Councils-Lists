@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { councilsAPI } from '../../services/api';
-import { logout, formatDate } from '../../utils/helpers';
+import { formatDate } from '../../utils/helpers';
 import './Dashboard.css';
 
 function Dashboard() {
@@ -42,12 +42,6 @@ function Dashboard() {
         }
     };
 
-    const handleLogout = () => {
-        if (window.confirm('Are you sure you want to logout?')) {
-            logout();
-        }
-    };
-
     return (
         <div className="dashboard">
             <header className="dashboard-header">
@@ -55,9 +49,6 @@ function Dashboard() {
                     <h1 className="dashboard-title">📊 Admin Dashboard</h1>
                     <div className="header-actions">
                         <a href="/" className="btn btn-secondary">View Public Map</a>
-                        <button onClick={handleLogout} className="btn btn-danger">
-                            Logout
-                        </button>
                     </div>
                 </div>
             </header>
