@@ -7,7 +7,6 @@ import {
     deleteCouncil,
     findNearestCouncils
 } from '../controllers/councilController.js';
-import { authenticateToken } from '../middleware/auth.js';
 
 const router = express.Router();
 
@@ -16,9 +15,9 @@ router.get('/', getAllCouncils);
 router.get('/:id', getCouncilById);
 router.post('/search', findNearestCouncils);
 
-// Protected routes (require authentication)
-router.post('/', authenticateToken, createCouncil);
-router.put('/:id', authenticateToken, updateCouncil);
-router.delete('/:id', authenticateToken, deleteCouncil);
+// Admin routes (site protected by password gate)
+router.post('/', createCouncil);
+router.put('/:id', updateCouncil);
+router.delete('/:id', deleteCouncil);
 
 export default router;
